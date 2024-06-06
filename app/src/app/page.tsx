@@ -18,6 +18,7 @@ const Home = () => {
 
   return (
     <div className="App">
+      <p>{message}</p>
       <Button type="primary">Generate Image</Button>
     </div>
   );
