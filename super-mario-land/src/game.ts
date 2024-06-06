@@ -23,57 +23,34 @@
  */
 
 import 'phaser';
-import * as aoconnect from '@permaweb/aoconnect';
-import { saveAs } from 'file-saver';
 import { GameConfig } from './config';
-import { promptModel } from './lib';
 
-async function genImage(promptText: string) {
-  try {
-    const image = await promptModel(
-      aoconnect.createDataItemSigner(globalThis.arweaveWallet),
-      promptText
-    );
-    return image;
-  } catch (e) {
-    console.error('Failed to load image');
-  }
-}
 
-function saveImage(base64Data: string, filename: string) {
-  const byteString = atob(base64Data.split(',')[1]);
-  const mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+// {
+//   "type": "spritesheet",
+//   "key": "mario",
+//   "url": "./assets/sprites/mario.png",
+//   "frameConfig": {
+//     "frameWidth": 16,
+//     "frameHeight": 16
+//   }
+// },
 
-  const ab = new ArrayBuffer(byteString.length);
-  const ia = new Uint8Array(ab);
-
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
-  }
-
-  const blob = new Blob([ab], { type: mimeString });
-  saveAs(blob, `${filename}.png`);
-}
-
-const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-const prompts = {
-  mainChars: ['mario', 'godzilla', 'monster'],
-  enemyChars: ['frog']
-};
+// {
+//   "type": "spritesheet",
+//   "key": "goomba",
+//   "url": "./assets/sprites/goomba.png",
+//   "frameConfig": {
+//     "frameWidth": 8,
+//     "frameHeight": 8
+//   }
+// },
 
 export class Game extends Phaser.Game {
   constructor(config: Phaser.Types.Core.GameConfig) {
     super(config);
-  }
-}
+  }}
 
 window.addEventListener('load', async () => {
-  // const mainCharImage = await genImage(getRandomItem(prompts.mainChars));
-  // saveImage(mainCharImage, 'mario');
-
-  // const enemyCharImage = await genImage(getRandomItem(prompts.enemyChars));
-  // saveImage(enemyCharImage, 'goomba');
-
   const game = new Game(GameConfig);
 });
