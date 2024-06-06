@@ -4,9 +4,8 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "antd";
 import Header from "../components/Header";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import { ArweaveWalletKit } from "arweave-wallet-kit";
-
 
 const Home = () => {
   const [base64Image, setBase64Image] = useState("");
