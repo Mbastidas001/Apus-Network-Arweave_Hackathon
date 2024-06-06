@@ -6,20 +6,56 @@ import { Button } from "antd";
 import { useEffect, useState } from "react";
 
 const Home = () => {
-  const [message, setMessage] = useState("");
+  const [base64Image, setBase64Image] = useState("");
+  const queryParams = new URLSearchParams({
+    prompt:
+      "portrait of a pretty blonde woman, a flower crown, earthy makeup, flowing maxi dress with colorful patterns and fringe, a sunset or nature scene, green and gold color scheme",
+  }).toString();
 
-  useEffect(() => {
-    // Fetch the message from the API route
-    fetch("/api/prompt")
-      .then((response) => response.json())
-      .then((data) => setMessage(data.message))
-      .catch((error) => console.error("Error fetching message:", error));
-  }, []);
+  const handleButtonClick = async () => {
+    try {
+      const response = await fetch(`/api/prompt?${queryParams}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setBase64Image(data.image); // Assuming the response has a field 'image' that contains the base64 string
+    } catch (error) {
+      console.error("Error fetching image:", error);
+    }
+  };
 
   return (
-    <div className="App">
-      <p>{message}</p>
-      <Button type="primary">Generate Image</Button>
+    <div
+      className="App"
+      style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}
+    >
+      {base64Image && (
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "auto",
+            maxWidth: "512px",
+          }}
+        >
+          <Image
+            src={`data:image/jpeg;base64,${base64Image}`}
+            alt="Generated"
+            layout="responsive"
+            width={512}
+            height={512}
+            objectFit="contain"
+          />
+        </div>
+      )}
+      <Button
+        type="primary"
+        onClick={handleButtonClick}
+        style={{ marginTop: "20px" }}
+      >
+        Generate Image
+      </Button>
     </div>
   );
 };

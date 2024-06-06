@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import * as fs from "fs";
 import * as path from "path";
-import { promisify } from 'util';
+import { promisify } from "util";
 import { message, createDataItemSigner, result } from "@permaweb/aoconnect";
 
 // Promisify the setTimeout function
