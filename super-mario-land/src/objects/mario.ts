@@ -66,9 +66,7 @@ export class Mario extends Phaser.GameObjects.Sprite {
   update(): void {
     if (!this.isDying) {
       this.handleInput();
-      this.handleAnimations();
     } else {
-      this.setFrame(12);
       if (this.y > this.currentScene.sys.canvas.height) {
         this.currentScene.scene.stop('GameScene');
         this.currentScene.scene.stop('HUDScene');
@@ -100,7 +98,6 @@ export class Mario extends Phaser.GameObjects.Sprite {
       this.body.blocked.down
     ) {
       this.isJumping = false;
-      //this.body.setVelocityY(0);
     }
 
     // handle movements to left and right
@@ -119,50 +116,6 @@ export class Mario extends Phaser.GameObjects.Sprite {
     if (this.keys.get('JUMP').isDown && !this.isJumping) {
       this.body.setVelocityY(-180);
       this.isJumping = true;
-    }
-  }
-
-  private handleAnimations(): void {
-    if (this.body.velocity.y !== 0) {
-      // mario is jumping or falling
-      this.anims.stop();
-      if (this.marioSize === 'small') {
-        this.setFrame(4);
-      } else {
-        this.setFrame(10);
-      }
-    } else if (this.body.velocity.x !== 0) {
-      // mario is moving horizontal
-
-      // check if mario is making a quick direction change
-      if (
-        (this.body.velocity.x < 0 && this.body.acceleration.x > 0) ||
-        (this.body.velocity.x > 0 && this.body.acceleration.x < 0)
-      ) {
-        if (this.marioSize === 'small') {
-          this.setFrame(5);
-        } else {
-          this.setFrame(11);
-        }
-      }
-
-      if (this.body.velocity.x > 0) {
-        this.anims.play(this.marioSize + 'MarioWalk', true);
-      } else {
-        this.anims.play(this.marioSize + 'MarioWalk', true);
-      }
-    } else {
-      // mario is standing still
-      this.anims.stop();
-      if (this.marioSize === 'small') {
-        this.setFrame(0);
-      } else {
-        if (this.keys.get('DOWN').isDown) {
-          this.setFrame(13);
-        } else {
-          this.setFrame(6);
-        }
-      }
     }
   }
 
@@ -209,7 +162,6 @@ export class Mario extends Phaser.GameObjects.Sprite {
       // sets acceleration, velocity and speed to zero
       // stop all animations
       this.body.stop();
-      this.anims.stop();
 
       // make last dead jump and turn off collision check
       this.body.setVelocityY(-180);
