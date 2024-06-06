@@ -3,7 +3,10 @@
 import Image from "next/image";
 import React from "react";
 import { Button } from "antd";
+import Header from "../components/Header";
 import { useEffect, useState } from "react";
+import { ArweaveWalletKit } from "arweave-wallet-kit";
+
 
 const Home = () => {
   const [base64Image, setBase64Image] = useState("");
@@ -26,6 +29,11 @@ const Home = () => {
   };
 
   return (
+    <ArweaveWalletKit
+      config={{
+        permissions: ["ACCESS_ADDRESS", "SIGN_TRANSACTION"],
+      }}
+    >
     <div
       className="App"
       style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}
@@ -49,6 +57,7 @@ const Home = () => {
           />
         </div>
       )}
+      <Header/>
       <Button
         type="primary"
         onClick={handleButtonClick}
@@ -57,6 +66,7 @@ const Home = () => {
         Generate Image
       </Button>
     </div>
+    </ArweaveWalletKit>
   );
 };
 
