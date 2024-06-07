@@ -94,7 +94,6 @@ function App() {
           setLoading(false);
         }
       }}>{loading ? 'loading' : 'Generate Image'}</button>
-      <div>{promptText}</div>
 
 
       {base64Img && <img src={`data:image/jpeg;charset=utf-8;base64, ${base64Img}`} style={{ width: 512, height: 512 }} />}
