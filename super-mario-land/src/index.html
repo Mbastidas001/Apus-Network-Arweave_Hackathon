@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="digitsensitive" />
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    #game {
+      width: 70%;
+      height: 100%;
+      background-color: #fff;
+      /* Assuming the game area has a white background */
+    }
+
+    #connect-wallet-container {
+      width: 30%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    #connect-wallet-button {
+      background-color: #000;
+      /* Arweave blue */
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #connect-wallet-button:hover {
+      background-color: #2c2c2c;
+      /* Darker Arweave blue for hover effect */
+      transform: translateY(-2px);
+    }
+
+    #connect-wallet-button:active {
+      background-color: #555555;
+      /* Even darker Arweave blue for active effect */
+      transform: translateY(0);
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="game"></div>
+  <div id="connect-wallet-container">
+    <button id="connect-wallet-button">Connect Wallet</button>
+  </div>
+
+  <script>
+    window.addEventListener('walletConnected', function (event) {
+      console.log('Custom event triggered:', event.detail);
+    });
+
+    document.getElementById("connect-wallet-button").onclick = async function () {
+      try {
+        await window.arweaveWallet.connect(
+          // request permissions to read the active address
+          ["ACCESS_ADDRESS", "SIGN_TRANSACTION"],
+          // provide some extra info for our app
+          {
+            name: "Super Mario Land",
+            logo: "https://img.icons8.com/color/452/super-mario.png"
+          }
+        );
+        document.getElementById("connect-wallet-button").textContent = "Connected";
+
+        // Create and dispatch a custom event
+        const walletConnectedEvent = new CustomEvent('walletConnected', {
+          detail: { message: 'Wallet successfully connected' }
+        });
+        window.dispatchEvent(walletConnectedEvent);
+      } catch (error) {
+        console.error("Connection failed", error);
+      }
+    };
+  </script>
+</body>
+
+</html>
