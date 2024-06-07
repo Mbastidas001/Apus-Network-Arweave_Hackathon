@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import * as aoconnect from "@permaweb/aoconnect";
-import { promptModel } from "./lib";
+import { promptModel , prompt_array} from "./lib";
+ 
 
 
 const PROCESS_ID = "1x2lsMZVr67txPJVZ0OQT7qOGYVP-w9EWqcfF57d0Dc"
@@ -46,6 +47,13 @@ async function messageResult(tags, data) {
 function App() {
   const [base64Img, setBase64Img] = useState()
   const [loading, setLoading] = useState(false)
+  const [promptText, setPromptText] = useState("")
+  const [prompt, setPrompt] = useState(''); // State to store the user prompt
+  
+  const handleInputChange = (event) => {
+    setPrompt(event.target.value);
+  };
+
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'center' }}>
@@ -60,24 +68,39 @@ function App() {
           }
         );
       }}>Connect Wallet</button>
+
+      <input
+        type="text"
+        value={prompt}
+        onChange={handleInputChange}
+        placeholder="Enter your prompt"
+        style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc', width: '300px' }}
+      />
+
       <button onClick={async () => {
         try {
-          if (loading) return
-          setLoading(true)
+          if (loading) return;
+          setLoading(true);
+          const pm = prompt || prompt_array[Math.floor(Math.random() * prompt_array.length)]
+          console.log(pm);
           const image = await promptModel(
             aoconnect.createDataItemSigner(globalThis.arweaveWallet),
-            "portrait of a pretty blonde woman, a flower crown, earthy makeup, flowing maxi dress with colorful patterns and fringe, a sunset or nature scene, green and gold color scheme",
+            pm
           );
-          // const { Messages } = await messageResult({ Action: "Get-AI-Task"}, { "taskID": "gMx9mj8C" })
-          // const res = JSON.parse(Messages[0].Data)
-          // setBase64Img(res.ResponseData.images[0])
-          setBase64Img(image)
+          setPromptText(pm);
+          setBase64Img(image);
+
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
-      }}>{loading ? 'loading' : 'Message AO Process'}</button>
+      }}>{loading ? 'loading' : 'Generate Image'}</button>
+      <div>{promptText}</div>
+
+
       {base64Img && <img src={`data:image/jpeg;charset=utf-8;base64, ${base64Img}`} style={{ width: 512, height: 512 }} />}
     </div>
+
+     
   )
 }
 
