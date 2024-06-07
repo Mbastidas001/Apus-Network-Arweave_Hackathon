@@ -1,7 +1,7 @@
 import { message, createDataItemSigner, result } from "@permaweb/aoconnect";
 
 const MODEL_PROCESS_ID = "1x2lsMZVr67txPJVZ0OQT7qOGYVP-w9EWqcfF57d0Dc";
-const IMG_PROCESS_ID = "";
+const IMG_PROCESS_ID = "WRI4K9G_7DsHA2BH17nT6pk-0nnmMZ7dI-UTD30iSrU";
 const DEFAULT_PROMPT =
   "portrait of a pretty blonde woman, a flower crown, earthy makeup, flowing maxi dress with colorful patterns and fringe, a sunset or nature scene, green and gold color scheme";
 
@@ -21,10 +21,10 @@ export async function fetchImage(
 
   const { Messages } = await result({
     message: messageId,
-    process: MODEL_PROCESS_ID,
+    process: IMG_PROCESS_ID,
   });
 
-  const imageData = JSON.parse(Messages[1].Data).imageData;
+  const imageData = Messages[0].Data;
   return imageData;
 }
 

@@ -66,25 +66,26 @@ export class AnimationHelper {
   private createGameAnimations(): void {
     for (let data of this.animationData.anims) {
       let frames;
-      let framesArray: Phaser.Types.Animations.AnimationFrame[] = [];
-
+      let framesArray: any[];
       if (data.frames.typeOfGeneration === 'generateFrameNames') {
         frames = this.scene.anims.generateFrameNames(data.frames.key, {
           prefix: data.frames.prefix || '',
           start: data.frames.start || 0,
           end: data.frames.end || 0,
           suffix: data.frames.suffix || '',
-          zeroPad: data.frames.zeroPad || 0
+          zeroPad: data.frames.zeroPad || 0,
+          frames: data.frames.frames || false
         });
       } else if (data.frames.typeOfGeneration === 'generateFrameNumbers') {
         frames = this.scene.anims.generateFrameNumbers(data.frames.key, {
           start: data.frames.start || 0,
           end: data.frames.end || -1,
-          first: data.frames.first || false
+          first: data.frames.first || false,
+          frames: data.frames.frames || false
         });
-      } else if (Array.isArray(data.frames)) {
+      } else {
         for (let i of data.frames) {
-          let frame: Phaser.Types.Animations.AnimationFrame = {
+          let frame = {
             key: i.key,
             frame: i.frame,
             duration: i.duration || 0,
@@ -92,8 +93,6 @@ export class AnimationHelper {
           };
           framesArray.push(frame);
         }
-      } else {
-        framesArray.push({ key: data.frames.key });
       }
 
       this.scene.anims.create({

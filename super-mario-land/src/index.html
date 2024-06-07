@@ -71,6 +71,10 @@
   </div>
 
   <script>
+    window.addEventListener('walletConnected', function (event) {
+      console.log('Custom event triggered:', event.detail);
+    });
+
     document.getElementById("connect-wallet-button").onclick = async function () {
       try {
         await window.arweaveWallet.connect(
@@ -83,6 +87,12 @@
           }
         );
         document.getElementById("connect-wallet-button").textContent = "Connected";
+
+        // Create and dispatch a custom event
+        const walletConnectedEvent = new CustomEvent('walletConnected', {
+          detail: { message: 'Wallet successfully connected' }
+        });
+        window.dispatchEvent(walletConnectedEvent);
       } catch (error) {
         console.error("Connection failed", error);
       }

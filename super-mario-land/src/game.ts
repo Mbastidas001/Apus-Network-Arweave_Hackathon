@@ -22,9 +22,10 @@
  * [4] [Generic Platformer and Phaser Bootstrap Project](https://github.com/nkholski/phaser3-es6-webpack)
  */
 
-import 'phaser';
-import { GameConfig } from './config';
-
+import "phaser";
+import { GameConfig } from "./config";
+import * as aoconnect from "@permaweb/aoconnect";
+import { promptModel, fetchImage } from "./lib";
 
 // {
 //   "type": "spritesheet",
@@ -46,11 +47,41 @@ import { GameConfig } from './config';
 //   }
 // },
 
+async function genImage(promptText: string): Promise<string | undefined> {
+  try {
+    const image = await promptModel(
+      aoconnect.createDataItemSigner(globalThis.arweaveWallet),
+      promptText
+    );
+    return "data:image/png;base64," + image;
+  } catch (e) {
+    console.error("Failed to load image", e);
+  }
+}
+
+async function fetchImg(promptText: string): Promise<string | undefined> {
+  try {
+    console.log("Fetching", promptText);
+    const image = await fetchImage(
+      aoconnect.createDataItemSigner(globalThis.arweaveWallet),
+      promptText
+    );
+    console.log(`data:image/png;base64,${image}`);
+    return "data:image/png;base64," + image;
+  } catch (e) {
+    console.error("Failed to load image", e);
+  }
+}
+
+// const mainCharImage = await fetchImg(getRandomItem(prompts.mainChars));
+// const enemyCharImage = await fetchImg(getRandomItem(prompts.enemyChars));
+
 export class Game extends Phaser.Game {
   constructor(config: Phaser.Types.Core.GameConfig) {
     super(config);
-  }}
+  }
+}
 
-window.addEventListener('load', async () => {
+window.addEventListener('walletConnected', async () => {
   const game = new Game(GameConfig);
 });
